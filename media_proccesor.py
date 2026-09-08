@@ -15,6 +15,7 @@ class MediaProcessor(ABC):
     def process(self, file_path):
         pass
 
+    @abstractmethod
     def validate(self, file_path):
         pass
 
