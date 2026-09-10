@@ -33,4 +33,4 @@ if __name__ == "__main__":
     try:
         raise FileLoadError("","")
     except MediaError as e:
-        print("{e}")
+        print(f"{e}")
