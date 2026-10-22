@@ -14,4 +14,4 @@ build/
 
 source/
 
-.md
+*.md
