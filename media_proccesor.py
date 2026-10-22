@@ -15,7 +15,7 @@ class MediaProcessor(ABC):
         pass
 
     @abstractmethod
-    def validate(self, file_path):
+    def validate(self, file_path) -> bool:
         pass
 
 class VideoProcessor(MediaProcessor):
@@ -27,6 +27,9 @@ class VideoProcessor(MediaProcessor):
     def get_video_info(self, file_path):
         cap = self.load_video(file_path)
 
+        if cap is None:
+            raise MediaError(message=f"Failed to load video: {file_path}", file_path=str(file_path))
+        
         try:
             import cv2
             fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -61,13 +64,13 @@ class VideoProcessor(MediaProcessor):
         #Extracting file path
         path = Path(file_path)
 
-        #Checking if path leads to existing file(and if it's file)
+            #Checking if path leads to existing file(and if it's file)
         if not path.is_file():
             raise FileLoadError(str(path), "No such file")
         #Checking if file extension is in SUPPORTED_EXTENSIONS
         if path.suffix.lower() not in self.SUPPORTED_EXTENSIONS:
             raise UnsupportedCodecError(str(path), path.suffix or "undefined")
-
+  
         #Trying to import OpenCV module
         try:
             import cv2
@@ -92,11 +95,14 @@ class VideoProcessor(MediaProcessor):
     #e.g. with Filters from Lab1
     def process(self, file_path):
         #Extracting video metadata
-        info = self.get_video_info(file_path)
+        try:
+            info = self.get_video_info(file_path)
 
         #Here also we can get VideoCapture object and do processing stuff
         
-        print(f"""{file_path}: {info['width']} x {info['height']}""")
+            print(f"""{file_path}: {info['width']} x {info['height']}""")
+        except MediaError:
+            print("Errors processing video file")
 
     #Validating if file with proposed path is exists and have 
     #supported extension
@@ -121,5 +127,10 @@ class VideoProcessor(MediaProcessor):
 if __name__ == "__main__":
     processor = VideoProcessor()
 
+    if processor.validate("..\\Lab1\\source\\test_video2.mp4"):
+        processor.process("..\\Lab1\\source\\test_video2.mp4")
+
     if processor.validate("..\\Lab1\\source\\test_video1.mp4"):
-        processor.process("..\\Lab1\\source\\test_video1.mp4")
+        processor.process("..\\Lab1\\source\\test_video1.pov")
+
+    

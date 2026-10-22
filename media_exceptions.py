@@ -6,14 +6,14 @@ class MediaError(Exception):
 
 #Исключение для ошибок загрузки файла
 class FileLoadError(MediaError):
-    def __init__(self, file_path, reason="Не удалось загрузить файл"):
+    def __init__(self, file_path, reason="Failed to load video"):
         self.message = f"{reason}: {file_path}"
         super().__init__(self.message, file_path)
 
 #Исключение для некорректных данных в файле
 class InvalidDataError(MediaError):
-    def __init__(self, file_path, data_type="видео"):
-        self.message = f"Некорректные данные в файле {file_path} ({data_type})"
+    def __init__(self, file_path, data_type="Video"):
+        self.message = f"Corrupted data in the file {file_path} ({data_type})"
         super().__init__(self.message, file_path)
 
 #Исключение для ошибок декодирования видео
